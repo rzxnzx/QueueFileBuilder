@@ -12,3 +12,8 @@ export const PoolSettings = mysql.createPool({
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
 });
+
+export const RedisSettings = {
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT)
+}

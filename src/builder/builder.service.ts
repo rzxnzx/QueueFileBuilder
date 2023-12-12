@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import * as ExcelJS from 'exceljs';
-import * as fs from 'fs';
 import * as path from 'path';
 
 @Injectable()

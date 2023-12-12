@@ -1,0 +1,1 @@
+export const EXCEL_GENERATION = 'excel_generation'
