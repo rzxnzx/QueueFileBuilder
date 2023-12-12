@@ -16,7 +16,7 @@ export class DatabaseService {
      * @param {params} params Parametros que se realizaran en la consulta, como where, set, etc. 
      * @returns results
      */
-    getData(query: string, params?: any[]): Promise<any> {
+    public getData(query: string, params?: any[]): Promise<any> {
         return new Promise((resolve, reject) => {
             this.pool.query(query, params, (error, results) => {
                 if (error) {
@@ -29,7 +29,7 @@ export class DatabaseService {
     }
 
     // Insertar datos
-    insertData(query: string, params: any[]): Promise<void> {
+    public insertData(query: string, params: any[]): Promise<void> {
         return new Promise((resolve, reject) => {
             this.pool.query(query, params, (error) => {
                 if (error) {
@@ -41,13 +41,16 @@ export class DatabaseService {
         });
     }
 
-    // Editar datos
-    updateData(query: string, params: any[]): Promise<void> {
-        return this.insertData(query, params);
+    public getLastInsertedId(): Promise<number> {
+        return new Promise((resolve, reject) => {
+            this.pool.query('SELECT LAST_INSERT_ID() as lastId', (error, results) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(results[0].lastId);
+            });
+        });
     }
 
-    // Borrar datos
-    deleteData(query: string, params: any[]): Promise<void> {
-        return this.insertData(query, params);
-    }
 }

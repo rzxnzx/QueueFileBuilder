@@ -13,8 +13,8 @@ export class UsersService {
         const userId = Number(id);
         const user = await this.prisma.user.findUnique({ where: { id: userId } });
 
-        if(!user){
-          return new NotFoundException()
+        if (!user) {
+            return new NotFoundException()
         }
         return user;
     }

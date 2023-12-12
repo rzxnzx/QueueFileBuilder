@@ -8,7 +8,6 @@ import { ExcelModule } from './excel/excel.module';
 import { DatabaseModule } from './database/database.module';
 import { BuilderService } from './builder/builder.service';
 
-
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule, UsersModule, ExcelModule, DatabaseModule],
   controllers: [AppController],
