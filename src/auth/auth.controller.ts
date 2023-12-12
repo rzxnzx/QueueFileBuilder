@@ -9,21 +9,8 @@ import { UsersService } from 'src/users/users.service';
 export class AuthController {
     constructor(private authService: AuthService, private userService: UsersService) { }
 
-    @Post('register')
-    public async registerUser(@Body() User: User) {
-        return this.userService.create(User);
-    }
-
-
-    @Post('login')
+    @Post('auth')
     public async login(@Body() Auth: AuthLogin) {
         return await this.authService.login(Auth)
     }
-
-    @UseGuards(RefreshJwtGuard)
-    @Post('refresh')
-    public async refreshToken(@Request() req: any) {
-        return await this.authService.refreshToken(req.user)
-    }
-
 }

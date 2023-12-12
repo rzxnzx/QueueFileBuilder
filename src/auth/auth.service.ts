@@ -29,8 +29,7 @@ export class AuthService {
 
     public async refreshToken(user: any) {
         const payload = {
-            username: user.username,
-            sub: user.sub
+            username: user.email,
         }
 
         return {
@@ -48,6 +47,7 @@ export class AuthService {
     }
 
     private async validateUser(Auth: AuthLogin) {
+
         const user = await this.userService.findByEmail(Auth.email);
 
         if (user && (await compare(Auth.password, user.password))) {
