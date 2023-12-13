@@ -4,7 +4,8 @@ import * as mysql from 'mysql2';
 dotenv.config();
 
 export const Query = {
-    BaseQuery: process.env.BASE_QUERY
+    BaseQuery: process.env.BASE_QUERY,
+    UserQuery: process.env.USER_QUERY
 }
 
 export const PoolSettings = mysql.createPool({
