@@ -9,8 +9,9 @@ import { DatabaseModule } from './database/database.module';
 import { BuilderService } from './builder/builder.service';
 import { BullModule } from '@nestjs/bull';
 import { QueueModule } from './queue/queue.module';
-import { RedisSettings } from './settings';
+import { EmailConfig, RedisSettings } from './settings';
 import { ZipService } from './zip/zip.service';
+import { EmailService } from './email/email/email.service';
 
 @Module({
   imports:
@@ -23,6 +24,6 @@ import { ZipService } from './zip/zip.service';
       }), QueueModule,
     ],
   controllers: [AppController],
-  providers: [AppService, BuilderService, ZipService],
+  providers: [AppService, BuilderService, ZipService, EmailService, EmailConfig],
 })
 export class AppModule { }

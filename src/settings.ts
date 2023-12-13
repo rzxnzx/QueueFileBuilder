@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv'
 import * as mysql from 'mysql2';
 dotenv.config();
@@ -16,4 +17,12 @@ export const PoolSettings = mysql.createPool({
 export const RedisSettings = {
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT)
+}
+
+@Injectable()
+export class EmailConfig {
+    smtpHost: string = 'tu_servidor_smtp';
+    smtpPort: number = 587;
+    smtpUser: string = 'tu_usuario_smtp';
+    smtpPass: string = 'tu_contraseña_smtp';
 }

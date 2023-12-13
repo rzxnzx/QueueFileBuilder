@@ -13,7 +13,7 @@ export class ExcelProcessor {
   @Process()
   public async generateExcel(job: Job) {
     const outputPath = await this.builderService.BuildExcel(job.data);
-    this.logger.log(`Generated Excel file at: ${outputPath}`);
+    this.logger.log(`Generated Zipped Excel file at: ${outputPath}`);
     
   }
 }
