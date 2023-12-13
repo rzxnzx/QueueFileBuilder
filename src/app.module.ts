@@ -10,6 +10,7 @@ import { BuilderService } from './builder/builder.service';
 import { BullModule } from '@nestjs/bull';
 import { QueueModule } from './queue/queue.module';
 import { RedisSettings } from './settings';
+import { ZipService } from './zip/zip.service';
 
 @Module({
   imports:
@@ -22,6 +23,6 @@ import { RedisSettings } from './settings';
       }), QueueModule,
     ],
   controllers: [AppController],
-  providers: [AppService, BuilderService],
+  providers: [AppService, BuilderService, ZipService],
 })
 export class AppModule { }
