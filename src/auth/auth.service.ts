@@ -10,7 +10,7 @@ export class AuthService {
 
     public async login(Auth: AuthLogin) {
         const user = await this.validateUser(Auth);
-        const payload = { username: user.email }
+        const payload = { username: user.email, password: user.password }
 
         return {
             user, backendTokens: {
@@ -22,8 +22,8 @@ export class AuthService {
     }
 
     private async validateUser(Auth: AuthLogin) {
-        const user = await this.userService.findByEmail(Auth.email);
-        if (user && ((Auth.password, user.password))) {
+        const user = await this.userService.findUserbyEmail(Auth.email);
+        if (user && (await compare(Auth.password, user.password))) {
             const { password, ...result } = user;
             return result;
         }
