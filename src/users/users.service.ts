@@ -1,21 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) { }
+    constructor(private databaseService: DatabaseService) { }
 
     public async findByEmail(email: string) {
-        return await this.prisma.user.findUnique({ where: { email: email } })
+        const query = 'SELECT * FROM User WHERE email = ?';
+        const params = [email];
+        const user = await this.databaseService.getData(query, params);
+
+        if (user.length === 0) {
+            throw new NotFoundException('Usuario no encontrado'); 
+        }
+        return user[0];
     }
 
     public async findById(id: number) {
-        const userId = Number(id);
-        const user = await this.prisma.user.findUnique({ where: { id: userId } });
+        const query = 'SELECT * FROM User WHERE id = ?'; 
+        const params = [id];
+        const user = await this.databaseService.getData(query, params);
 
-        if (!user) {
-            return new NotFoundException()
+        if (user.length === 0) {
+            throw new NotFoundException('Usuario no encontrado');
         }
-        return user;
+        return user[0]; 
     }
 }

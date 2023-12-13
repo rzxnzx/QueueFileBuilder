@@ -15,13 +15,11 @@ export class ExcelController {
         @InjectQueue(EXCEL_GENERATION) private excelQueue: Queue
     ) { }
 
-    // @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     @Post('generate')
     public async InsertDataAndRetrieveResults(@Body() payloadDTO: PayloadDTO) {
         const insertedId = await this.excel.InsertSQLIntoDatabase(payloadDTO);
         const ExcelData = await this.excel.GetDataFromSQLQuery(insertedId);
-
-        // Extraer datos de email, subject y message del campo "payload"
         const { email, reporte_titulo, reporte_descripcion } = JSON.parse(payloadDTO.payload);
 
         const job = await this.excelQueue.add({ ExcelData, emailData: { email, reporte_titulo, reporte_descripcion } });

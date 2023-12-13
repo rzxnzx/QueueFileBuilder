@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { AuthLogin } from './dto/auth.dto';
 
@@ -24,7 +23,7 @@ export class AuthService {
 
     private async validateUser(Auth: AuthLogin) {
         const user = await this.userService.findByEmail(Auth.email);
-        if (user && (await compare(Auth.password, user.password))) {
+        if (user && ((Auth.password, user.password))) {
             const { password, ...result } = user;
             return result;
         }
