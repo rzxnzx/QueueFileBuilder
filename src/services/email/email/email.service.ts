@@ -22,7 +22,7 @@ export class EmailService {
       to: email,
       subject: subject,
       text: message,
-      attachments: [{ path: attachmentPath }],
+      attachments: [{ path: attachmentPath, filename: 'reporte.zip' }],
     };
 
     await transporter.sendMail(mailOptions);

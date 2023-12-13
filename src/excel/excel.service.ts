@@ -58,12 +58,12 @@ export class ExcelService {
     }
 
 
-    public async GetDataFromSQLQuery(id: number) {
+    public async GetDataFromSQLQuery(id: number): Promise<any[]> { // Change the return type to an array
         const sql = await this.ExtractSQLFromDatabase(id);
         const data = await this.database.getData(sql);
-        return data;
+        return data; // Return the data as an array
     }
-
+    
     private async ExtractSQLFromDatabase(id: number): Promise<string> {
         const results = await this.database.getData(Query.BaseQuery, [id]);
         if (results.length > 0 && results[0].raw_query) {

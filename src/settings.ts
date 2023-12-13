@@ -19,10 +19,11 @@ export const RedisSettings = {
     port: parseInt(process.env.REDIS_PORT)
 }
 
+
 @Injectable()
 export class EmailConfig {
-    smtpHost: string = 'tu_servidor_smtp';
-    smtpPort: number = 587;
-    smtpUser: string = 'tu_usuario_smtp';
-    smtpPass: string = 'tu_contraseña_smtp';
+    smtpHost: string = process.env.SMTP_HOST;
+    smtpPort: number = 465;
+    smtpUser: string = process.env.SMTP_USER;
+    smtpPass: string = process.env.SMTP_PASS;
 }

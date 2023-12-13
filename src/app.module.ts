@@ -6,12 +6,12 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ExcelModule } from './excel/excel.module';
 import { DatabaseModule } from './database/database.module';
-import { BuilderService } from './builder/builder.service';
+import { ExcelBuilderService } from './excel/builder/excel.builder.service';
 import { BullModule } from '@nestjs/bull';
 import { QueueModule } from './queue/queue.module';
 import { EmailConfig, RedisSettings } from './settings';
-import { ZipService } from './zip/zip.service';
-import { EmailService } from './email/email/email.service';
+import { ZipService } from './services/zip/zip.service';
+import { EmailService } from './services/email/email/email.service';
 
 @Module({
   imports:
@@ -24,6 +24,6 @@ import { EmailService } from './email/email/email.service';
       }), QueueModule,
     ],
   controllers: [AppController],
-  providers: [AppService, BuilderService, ZipService, EmailService, EmailConfig],
+  providers: [AppService, ExcelBuilderService, ZipService, EmailService, EmailConfig],
 })
 export class AppModule { }
