@@ -20,7 +20,11 @@ export class ExcelController {
     public async InsertDataAndRetrieveResults(@Body() payloadDTO: PayloadDTO) {
         const insertedId = await this.excel.InsertSQLIntoDatabase(payloadDTO);
         const ExcelData = await this.excel.GetDataFromSQLQuery(insertedId);
-        const job = await this.excelQueue.add(ExcelData);
+
+        // Extraer datos de email, subject y message del campo "payload"
+        const { email, reporte_titulo, reporte_descripcion } = JSON.parse(payloadDTO.payload);
+
+        const job = await this.excelQueue.add({ ExcelData, emailData: { email, reporte_titulo, reporte_descripcion } });
         this.logger.log(`Added job to the queue: ${job.id}`);
     }
 }

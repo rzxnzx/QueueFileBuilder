@@ -12,7 +12,17 @@ export class ExcelProcessor {
 
   @Process()
   public async generateExcel(job: Job) {
-    await this.builderService.BuildExcel(job.data);
-    this.logger.log(`Sent Generated Zipped Excel file!`);
+    const t0 = performance.now();
+    const { ExcelData, emailData } = job.data;
+
+    await this.builderService.BuildExcel(ExcelData, emailData);
+    
+    const t1 = performance.now();
+    const executionTimeMs = t1 - t0;
+    const minutes = Math.floor(executionTimeMs / 60000);
+    const seconds = ((executionTimeMs % 60000) / 1000).toFixed(2);
+
+    this.logger.log(`Sent Generated Zipped Excel file for the job ${job.id}!`);
+    this.logger.log(`Took ${minutes} minutes and ${seconds} seconds.`);
   }
 }

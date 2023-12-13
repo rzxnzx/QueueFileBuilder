@@ -1,33 +1,42 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import * as ExcelJS from 'exceljs';
 import * as path from 'path';
 import * as fs from 'fs';
 import { ZipService } from '../../services/zip/zip.service';
 import { EmailService } from 'src/services/email/email/email.service';
 import { promisify } from 'util';
+import * as cliProgress from 'cli-progress';
+
+
+export interface EmailDataDTO {
+    email: string;
+    reporte_titulo: string;
+    reporte_descripcion: string;
+}
+
 
 @Injectable()
 export class ExcelBuilderService {
+    private readonly logger = new Logger(ExcelBuilderService.name);
+    private progressBar: cliProgress.SingleBar;
+
     constructor(
         @Inject(ZipService) private readonly zipService: ZipService,
         @Inject(EmailService) private readonly emailService: EmailService
     ) { }
 
-    public async BuildExcel(data: any[]): Promise<string> {
+    public async BuildExcel(data: any[], emailData: EmailDataDTO): Promise<string> {
         try {
             const currentDate = new Date();
             const name = `reporte_${currentDate.getTime()}`;
-            const zipFilePath = path.join(__dirname, `../../out/${name}.zip`);
 
             const batches = this.splitDataIntoBatches(data, name);
             const excelFilePaths = await this.generateExcelFiles(batches, name);
             const mergedExcelFilePath = await this.mergeExcelFiles(excelFilePaths, name);
+            const zipFilePath = await this.createZipFile(mergedExcelFilePath, name);
+            await this.sendEmailWithAttachment(emailData, zipFilePath, name);
 
-            const ZipFilePath = await this.createZipFile(mergedExcelFilePath, name);
-
-            await this.sendEmailWithAttachment(zipFilePath, name);
-
-            return ZipFilePath;
+            return zipFilePath;
         } catch (error) {
             console.error('Error al construir y enviar el archivo:', error);
             throw error;
@@ -49,15 +58,20 @@ export class ExcelBuilderService {
 
     private async generateExcelFiles(batches: any[][], name: string): Promise<string[]> {
         const excelFilePaths = [];
-
+        this.progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+        this.logger.debug(this.progressBar.start(batches.length, 0))
         for (let i = 0; i < batches.length; i++) {
             const batch = batches[i];
             const excelFilePath = await this.generateExcelFile(batch, name, i);
             excelFilePaths.push(excelFilePath);
+            this.logger.debug(this.progressBar.update(i + 1))
         }
+
+        this.progressBar.stop()
 
         return excelFilePaths;
     }
+
 
     private async generateExcelFile(batch: any[], name: string, index: number): Promise<string> {
         const workbook = new ExcelJS.Workbook();
@@ -68,7 +82,7 @@ export class ExcelBuilderService {
             worksheet.addRows(batch);
         }
 
-        const excelFilePath = path.join(__dirname, `../../out/${name}_${index}.xlsx`);
+        const excelFilePath = path.join(__dirname, `../../../out/${name}_${index}.xlsx`);
         const stream = fs.createWriteStream(excelFilePath);
         await workbook.xlsx.write(stream);
         stream.end();
@@ -88,7 +102,7 @@ export class ExcelBuilderService {
             await promisify(fs.unlink)(excelFilePath);
         }
 
-        const mergedExcelFilePath = path.join(__dirname, `../../out/${name}_merged.xlsx`);
+        const mergedExcelFilePath = path.join(__dirname, `../../../out/${name}_merged.xlsx`);
         const mergedStream = fs.createWriteStream(mergedExcelFilePath);
         await mergedWorkbook.xlsx.write(mergedStream);
         mergedStream.end();
@@ -104,7 +118,7 @@ export class ExcelBuilderService {
 
         const zipContent = await this.zipService.createZip(filesForZip);
 
-        const zipFilePath = path.join(__dirname, `../../out/${name}.zip`);
+        const zipFilePath = path.join(__dirname, `../../../out/${name}.zip`);
         const zipStream = fs.createWriteStream(zipFilePath);
         zipStream.write(zipContent);
         zipStream.end();
@@ -112,16 +126,13 @@ export class ExcelBuilderService {
         return zipFilePath;
     }
 
-    private async sendEmailWithAttachment(zipFilePath: string, name: string): Promise<void> {
-        const recipientEmail = 'noahwalker2507@gmail.com';
-        const subject = 'Correo de prueba';
-        const message = 'Mensaje de correo electrónico';
+    private async sendEmailWithAttachment(emailData: EmailDataDTO, zipFilePath: string, name: string): Promise<void> {
+        const { email, reporte_titulo, reporte_descripcion } = emailData;
 
-        await this.emailService.sendEmailWithAttachment(recipientEmail, subject, message, zipFilePath);
+        await this.emailService.sendEmailWithAttachment(email, reporte_titulo, reporte_descripcion, zipFilePath);
         await Promise.all([
             promisify(fs.unlink)(zipFilePath),
-            promisify(fs.unlink)(path.join(__dirname, `../../out/${name}_merged.xlsx`))
+            promisify(fs.unlink)(path.join(__dirname, `../../../out/${name}_merged.xlsx`))
         ]);
     }
-
-}
+}   

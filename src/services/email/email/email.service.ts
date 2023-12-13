@@ -1,4 +1,3 @@
-// src/email/email.service.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { EmailConfig } from 'src/settings';
 import * as nodemailer from 'nodemailer';
@@ -7,7 +6,7 @@ import * as nodemailer from 'nodemailer';
 export class EmailService {
   constructor(@Inject(EmailConfig) private readonly emailConfig: EmailConfig) {}
 
-  async sendEmailWithAttachment(email: string, subject: string, message: string, attachmentPath: string): Promise<void> {
+  public async sendEmailWithAttachment(email: string, subject: string, message: string, attachmentPath: string): Promise<void> {
     const transporter = nodemailer.createTransport({
       host: this.emailConfig.smtpHost,
       port: this.emailConfig.smtpPort,

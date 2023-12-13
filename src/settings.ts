@@ -23,7 +23,7 @@ export const RedisSettings = {
 @Injectable()
 export class EmailConfig {
     smtpHost: string = process.env.SMTP_HOST;
-    smtpPort: number = 465;
+    smtpPort: number = parseInt(process.env.SMTP_PORT);
     smtpUser: string = process.env.SMTP_USER;
     smtpPass: string = process.env.SMTP_PASS;
 }
