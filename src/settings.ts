@@ -3,10 +3,13 @@ import * as dotenv from 'dotenv'
 import * as mysql from 'mysql2';
 dotenv.config();
 
-export const Query = {
-    BaseQuery: process.env.BASE_QUERY
+export const CoreSettings = {
+    Token: process.env.JTW_TOKEN
 }
 
+/**
+ * Configuración para la conexión a la base de datos MySQL.
+ */
 export const PoolSettings = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -14,15 +17,21 @@ export const PoolSettings = mysql.createPool({
     database: process.env.DB_NAME
 });
 
+/**
+ * Configuración para la conexión a Redis.
+ */
 export const RedisSettings = {
     host: process.env.REDIS_HOST,
     port: parseInt(process.env.REDIS_PORT)
 }
 
+/**
+ * Configuración para la conexión SMTP para el envío de correos.
+ */
 @Injectable()
 export class EmailConfig {
-    smtpHost: string = 'tu_servidor_smtp';
-    smtpPort: number = 587;
-    smtpUser: string = 'tu_usuario_smtp';
-    smtpPass: string = 'tu_contraseña_smtp';
+    smtpHost: string = process.env.SMTP_HOST;
+    smtpPort: number = parseInt(process.env.SMTP_PORT);
+    smtpUser: string = process.env.SMTP_USER;
+    smtpPass: string = process.env.SMTP_PASS;
 }
