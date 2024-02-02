@@ -1,7 +1,7 @@
 
 # Get Started
 
-QueueBuilderFile es un proyecto realizado en [NestJS](https://nestjs.com/) como Framework y [TypeScript](https://www.typescriptlang.org/) como lenguaje de programación. La idea principal de este proyecto es que pueda ser completamente modular y que no hayan complicaciones al momento de agregar mayores funcionalidades. El proyecto se compone de una base de datos [MySQL]() como motor principal de persistencia de datos y una base de datos no relacional, la cual es [Redis](https://docs.nestjs.com/microservices/redis).
+QueueFileBuilder es un proyecto realizado en [NestJS](https://nestjs.com/) como Framework y [TypeScript](https://www.typescriptlang.org/) como lenguaje de programación. La idea principal de este proyecto es que pueda ser completamente modular y que no hayan complicaciones al momento de agregar mayores funcionalidades. El proyecto se compone de una base de datos [MySQL]() como motor principal de persistencia de datos y una base de datos no relacional, la cual es [Redis](https://docs.nestjs.com/microservices/redis).
 
 ### Initial Setup
 
@@ -50,7 +50,7 @@ Luego simplemente podemos hacer nuestras peticiones, agregando el ya mencionado 
 
 El proyecto está estructurado con la siguiente organización de carpetas. Está diseñado de esta forma para poder dar un mayor enfoque modular y que sea escalable a corto o largo plazo.
 ```
-└── 📁QueueBuilderFile
+└── 📁QueueFileBuilder
     └── .env.example
     └── docker-compose.yml
     └── nest-cli.json
