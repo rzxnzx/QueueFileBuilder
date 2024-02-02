@@ -1,73 +1,142 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Get Started
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+QueueBuilderFile es un proyecto realizado en [NestJS](https://nestjs.com/) como Framework y [TypeScript](https://www.typescriptlang.org/) como lenguaje de programación. La idea principal de este proyecto es que pueda ser completamente modular y que no hayan complicaciones al momento de agregar mayores funcionalidades. El proyecto se compone de una base de datos [MySQL]() como motor principal de persistencia de datos y una base de datos no relacional, la cual es [Redis](https://docs.nestjs.com/microservices/redis).
 
-## Description
+### Initial Setup
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+Para poder realizar la inicialización del proyecto se requieren diferentes datos que deben ser agregados a nuestras variables de entorno. Para ello primeramente clonaremos nuestro archivo `.env.example` y lo llamaremos `.env`, el cual contiene los siguientes campos:
 ```
+#TOKEN KEYS
+JwtSecretKey=
+JWT_TOKEN=
 
-## Running the app
+#DB MYSQL
+DB_HOST=
+DB_USER=
+DB_PASS=
+DB_NAME=
+
+#REDIS DB
+REDIS_PORT=
+REDIS_HOST=
+
+# SMTP
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+```
+Los campos ya vienen comentados para tener un mayor contexto de que se debe colocar en cada caompo, sin embargo, los más importantes para poder proteger la ruta de la petición para generar nuestro archivo excel se encuentra en el campo `JwtSecretKey`, la cual debe ser una Key en la cual se debe basar `JWT` para poder firmar el token y corroborar su validez. Personalmente recomendaria usar un comando como `openssl rand -base64 64` el cual generará una Key de 64 bits la cual podemos usar para que JWT pueda firmar el token y confirmar su veracidad.
+
+Para poder generar el token debemos correr el script `token.js`, para ello utilizamos el comando `node token.js` desde el directorio raíz del proyecto. Con ello nos generará un token el cual debemos entonces colocar en nuestras variables de entorno, especificamente el campo `JWT_TOKEN`. Luego los demás campos simplemente nos piden credenciales, como los credenciales de conexión a nuestras bases de datos [MySQL](https://www.npmjs.com/package/mysql2) y [Redis](https://docs.nestjs.com/microservices/redis) y por último las credenciales del `SMTP` que son las que nos permitirán enviar los archivos generados por correo. Una vez con todos los campos inicializados, podemos entonces proceder a arrancar nuestro proyecto con los siguientes comandos 
+```bash
+$ npm run start:dev
+``` 
+En caso de realizar cambios y entorno de desarrollo, este script tiene como particularidad que viene configurado con un `--watch` lo cual permite evitar instalar librerias como `nodemon` para poder visualizar cada cambio en la consola, por ello es una buena practica iniciar el proyecto durante el desarrollo, para poder ir viendo los logs y así evitar errores mayores. Si todo está correcto, procedemos entonces con los comandos
 
 ```bash
-# development
-$ npm run start
+$ npm run build
+```
+El cual se utilizará para poder transpilar el código de `TypeScript` a `JavaScript`.
 
-# watch mode
-$ npm run start:dev
-
-# production mode
+y ya por último para inicializar un entorno de producción.
+```bash
 $ npm run start:prod
 ```
+Luego simplemente podemos hacer nuestras peticiones, agregando el ya mencionado Token a los header de la petición y las rutas que se muestran en la consola una vez inicializada la aplicación como `[RouterExplorer]`. 
 
-## Test
+### Structure
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+El proyecto está estructurado con la siguiente organización de carpetas. Está diseñado de esta forma para poder dar un mayor enfoque modular y que sea escalable a corto o largo plazo.
+```
+└── 📁QueueBuilderFile
+    └── .env.example
+    └── docker-compose.yml
+    └── nest-cli.json
+    └── package.json
+    └── README.md
+    └── 📁src
+        └── app.module.ts
+        └── 📁guards
+            └── 📁jwt
+                └── jwt.guard.ts
+        └── main.ts
+        └── 📁modules
+            └── 📁core
+                └── 📁database
+                    └── 📁mysql
+                        └── database.module.ts
+                        └── database.service.ts
+                    └── 📁redis
+                        └── redis.module.ts
+                └── 📁queue
+                    └── queue.module.ts
+            └── 📁Excel
+                └── excel.controller.ts
+                └── excel.module.ts
+                └── 📁processors
+                    └── excel.processor.ts
+                └── 📁services
+                    └── excel.builder.service.ts
+                    └── excel.service.ts
+                └── 📁utils
+                    └── excel.dto.ts
+        └── 📁services
+            └── 📁colors
+                └── color.service.ts
+            └── 📁email
+                └── email.service.ts
+                └── 📁utils
+                    └── email.dto.ts
+            └── 📁time
+                └── 📁time
+                    └── time.service.ts
+            └── 📁zip
+                └── zip.service.ts
+        └── settings.ts
+        └── 📁utils
+            └── 📁constants
+                └── 📁Queues
+                    └── excelQueue.constants.ts
+    └── token.js
+    └── tsconfig.build.json
+    └── tsconfig.json
 ```
 
-## Support
+La idea principal es que al momento de agregar un modulo adicional sea solo agregarlo con la estructura que lleva el proyecto. Cada módulo tiene su propio servicio interno que se encarga de llevar la lógica, sin embargo, en la carpeta `Services` 
+```
+    └── 📁services
+        └── 📁colors
+            └── color.service.ts
+        └── 📁email
+            └── email.service.ts
+            └── 📁utils
+                └── email.dto.ts
+        └── 📁time
+            └── 📁time
+                └── time.service.ts
+        └── 📁zip
+               └── zip.service.ts
+```
+Hay servicios generales que pueden ser reutilizados en todos los demás módulos que se vayan a realizar como el servicio de `Email` o el servicio de `Zip`, a demás de módulos necesarios, como los que están en la carpeta `Core` la cual contiene los modulos de `Database` y `Queue`. 
+```
+        └── 📁modules
+            └── 📁core
+                └── 📁database
+                    └── 📁mysql
+                        └── database.module.ts
+                    └── 📁redis
+                        └── redis.module.ts
+                └── 📁queue
+                    └── queue.module.ts
+            └── 📁Excel
+                └── excel.module.ts
+``` 
+La idea es no modificar estos módulos a menos que sea para mejoras sustanciales, ya que se encargan de gran parte del funcionamiento general de la aplicación, principlamente el modulo `Queue` el cual contiene la configuración con [Redis](https://docs.nestjs.com/microservices/redis). En esta primera parte del proyecto hemos implementado el módulo `Excel` el cual se encargará de las siguientes funciones:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Obtener datos de la base de datos
+- Dividir los datos en conjuntos mas pequeños (Este valor es ajustable, revisar el archivo `settings.ts`)
+- Escribir los datos en un archivo de Excel y generar hojas de cálculo en base a la cantidad de datos requeridos.
+- Comprimir el archivo excel para evitar problemas mayores.
+- Enviar por correo al usuario solicitado (Estos datos se obtienen en el campo `payload` de la petición)

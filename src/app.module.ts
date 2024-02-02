@@ -1,29 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { ExcelModule } from './excel/excel.module';
-import { DatabaseModule } from './database/database.module';
-import { BuilderService } from './builder/builder.service';
-import { BullModule } from '@nestjs/bull';
-import { QueueModule } from './queue/queue.module';
-import { EmailConfig, RedisSettings } from './settings';
-import { ZipService } from './zip/zip.service';
-import { EmailService } from './email/email/email.service';
+import { ExcelBuilderService } from './modules/util/excel/services/excel.builder.service';
+import { DatabaseModule } from './modules/core/database/mysql/database.module';
+import { ExcelModule } from './modules/util/excel/excel.module';
+import { QueueModule } from './modules/core/queue/queue.module';
+import { EmailConfig } from './settings';
+import { ZipService } from './services/utils/zip.service';
+import { EmailService } from './services/email/email.service';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisModule } from './modules/core/database/redis/redis.module';
+import { ColorService } from './services/colors/color.service';
+import { TimeService } from './services/time/time.service';
 
 @Module({
-  imports:
-    [
-      ConfigModule.forRoot(), AuthModule, UsersModule, ExcelModule, DatabaseModule, BullModule.forRoot({
-        redis: {
-          host: RedisSettings.host,
-          port: RedisSettings.port
-        }
-      }), QueueModule,
-    ],
-  controllers: [AppController],
-  providers: [AppService, BuilderService, ZipService, EmailService, EmailConfig],
+  imports: [ConfigModule.forRoot(), ExcelModule, DatabaseModule, QueueModule, CacheModule.register(), RedisModule],
+  controllers: [],
+  providers: [ExcelBuilderService, ZipService, EmailService, EmailConfig, ColorService, TimeService],
 })
 export class AppModule { }
