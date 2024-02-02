@@ -5,7 +5,7 @@ import { EXCEL_GENERATION } from 'src/utils/constants/Queues/excelQueue.constant
 import { EmailService } from 'src/services/email/email.service';
 import { ExcelProcessor } from 'src/modules/util/excel/processors/excel.processor';
 import { EmailConfig, RedisSettings } from 'src/settings';
-import { ZipService } from 'src/services/zip/zip.service';
+import { ZipService } from 'src/services/utils/zip.service';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ColorService } from 'src/services/colors/color.service';
 import { TimeService } from 'src/services/time/time.service';

@@ -1,6 +1,6 @@
 import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { PayloadService } from '../../../services/core/payload.service';
-import { JwtGuard } from 'src/guards/jwt/jwt.guard';
+import { JwtGuard } from 'src/guards/jwt.guard';
 import { PayloadDTO } from './utils/excel.dto';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';

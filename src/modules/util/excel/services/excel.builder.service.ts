@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import * as ExcelJS from 'exceljs';
 import * as path from 'path';
 import * as fs from 'fs';
-import { ZipService } from 'src/services/zip/zip.service';
+import { ZipService } from 'src/services/utils/zip.service';
 import { EmailService } from 'src/services/email/email.service';
 import { promisify } from 'util';
 import { EmailDataDTO } from 'src/services/email/utils/email.dto';

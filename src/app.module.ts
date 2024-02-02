@@ -5,7 +5,7 @@ import { DatabaseModule } from './modules/core/database/mysql/database.module';
 import { ExcelModule } from './modules/util/excel/excel.module';
 import { QueueModule } from './modules/core/queue/queue.module';
 import { EmailConfig } from './settings';
-import { ZipService } from './services/zip/zip.service';
+import { ZipService } from './services/utils/zip.service';
 import { EmailService } from './services/email/email.service';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisModule } from './modules/core/database/redis/redis.module';
